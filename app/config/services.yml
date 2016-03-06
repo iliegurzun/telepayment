@@ -6,3 +6,5 @@ parameters:
 services:
     app.payment_date_calculator:
         class: AppBundle\Services\PaymentDateCalculator
+        calls:
+            - [setFilename, ['file.csv']]

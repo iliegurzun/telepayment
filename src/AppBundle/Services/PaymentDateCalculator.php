@@ -26,6 +26,9 @@ class PaymentDateCalculator
     /** @const string */
     const DAY_SUNDAY = 'Sunday';
 
+    /** @var string */
+    protected $filename;
+
     /**
      * Calculates the payment dates and generates the CSV file with
      * all payment dates for the next 12 months
@@ -116,12 +119,31 @@ class PaymentDateCalculator
      */
     public function generateCsv(array $dates)
     {
-        $fp = fopen('file.csv', 'w');
+        $fp = fopen($this->getFilename(), 'w');
         foreach ($dates as $fields) {
             fputcsv($fp, $fields);
         }
         fclose($fp);
 
-        return realpath('file.csv');
+        return realpath($this->getFilename());
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     * @return PaymentDateCalculator
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
     }
 }

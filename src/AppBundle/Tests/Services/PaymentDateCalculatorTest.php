@@ -29,6 +29,21 @@ class PaymentDateCalculatorTest extends AbstractTest
     }
 
     /**
+     * Test for execute() method
+     */
+    public function testExecute()
+    {
+        // remove testing file if already exists
+        try {
+            unlink('foobar.csv');
+        } catch (\Exception $ex) {}
+        $service = $this->mockPaymentCalculator();
+        $service->execute();
+        $this->assertFileExists('foobar.csv');
+        unlink('foobar.csv');
+    }
+
+    /**
      * Mock PaymentDateCalculator
      *
      * @return PaymentDateCalculator
@@ -37,11 +52,19 @@ class PaymentDateCalculatorTest extends AbstractTest
     {
         $service = $this
             ->getMockBuilder(PaymentDateCalculator::class)
-            ->setMethods(array('getCurrentMonth'))
+            ->setMethods(
+                array(
+                    'getCurrentMonth',
+                    'getFilename'
+                )
+            )
             ->getMock();
         $service->expects($this->any())
             ->method('getCurrentMonth')
             ->will($this->returnValue(1));
+        $service->expects($this->any())
+            ->method('getFilename')
+            ->will($this->returnValue('foobar.csv'));
 
         return $service;
     }
